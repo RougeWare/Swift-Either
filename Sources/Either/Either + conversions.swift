@@ -12,7 +12,7 @@ import Foundation
 // MARK: - Either ↔️ Optional
 
 public extension Either where Left == Void {
-    /// Converts an `Optional` into an `Either`, converting the `.none` case into `.left(Void)`, and `.some(right)` into `.right(right)`
+    /// Converts an `Optional` into an `Either`, converting the `.none` case into `.left(Void())`, and `.some(right)` into `.right(right)`
     ///
     /// - Parameter optional: The value to be converted into an `Either`
     init(_ optional: Optional<Right>) { // TODO: Test
@@ -34,7 +34,7 @@ public extension Optional {
     /// The given `Either` must have its `Left` be `Void`. The `Right` will be treated as the possibly-nil value when it's not nil
     ///
     /// - Parameter either: The `Either` which can be represented as an `Optional<Right>`
-    init(_ either: Either<Void, Wrapped>) { // TODO: Test
+    init(_ either: Either<Void, Wrapped>) {
         switch either {
         case .left(_):
             self = .none

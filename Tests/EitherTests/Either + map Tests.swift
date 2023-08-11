@@ -13,9 +13,6 @@ import Either
 
 final class Either___map_Tests: XCTestCase {
     
-    let stringLeft = Either<String, Int>.left("Left Classic")
-    let intRight = Either<String, Int>.right(8008)
-    
     // MARK: - .map(left:right:)
     
     func testMapLeftRight_String_Int() throws {
