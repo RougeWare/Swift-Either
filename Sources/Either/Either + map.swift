@@ -40,7 +40,7 @@ public extension Either {
     /// - Parameter mapper: Passed the current "left" value, and returns a new value, optionally of a new type
     /// - Returns: A new `Either` containing the same "right" value and type, and a new "left" value andor type
     func map<NewLeft>(left mapper: (Left) -> NewLeft)
-    -> Either<NewLeft, Right> { // TODO: Test
+    -> Either<NewLeft, Right> {
         switch self {
         case .left(let left):
             return .left(mapper(left))
@@ -56,7 +56,7 @@ public extension Either {
     /// - Parameter mapper: Passed the current "right" value, and returns a new value, optionally of a new type
     /// - Returns: A new `Either` containing the same "left" value and type, and a new "right" value andor type
     func map<NewRight>(right mapper: (Right) -> NewRight)
-    -> Either<Left, NewRight> { // TODO: Test
+    -> Either<Left, NewRight> {
         switch self {
         case .left(let left):
             return .left(left)
@@ -81,7 +81,7 @@ public extension Either {
     ///
     /// - Returns: A new `Either` with its types remapped
     func _autoMap<NewLeft>(_ mapper: (Left) -> NewLeft)
-    -> Either<NewLeft, Right> { // TODO: Test
+    -> Either<NewLeft, Right> {
         map(left: mapper)
     }
     
@@ -95,7 +95,7 @@ public extension Either {
     ///
     /// - Returns: A new `Either` with its types remapped
     func _autoMap<NewRight>(_ mapper: (Right) -> NewRight)
-    -> Either<Left, NewRight> { // TODO: Test
+    -> Either<Left, NewRight> {
         map(right: mapper)
     }
 }
