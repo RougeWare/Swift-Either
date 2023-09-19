@@ -13,7 +13,8 @@ import Foundation
 
 extension Either: Equatable where Left: Equatable, Right: Equatable {
     
-    public static func == (lhs: Self, rhs: Self) -> Bool { // TODO: Test
+    @inlinable
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (a: lhs, b: rhs) {
         case (a: .left(let leftA), b: .left(let leftB)):
             return leftA == leftB
@@ -27,9 +28,10 @@ extension Either: Equatable where Left: Equatable, Right: Equatable {
     }
     
     
+    @inlinable
     public static func == (lhs: Self, rhs: Self) -> Bool
     where Left == Right
-    { // TODO: Test
+    {
         switch (a: lhs, b: rhs) {
         case (a: .left(let a),  b: .left(let b)),
              (a: .right(let a), b: .right(let b)),
@@ -37,6 +39,14 @@ extension Either: Equatable where Left: Equatable, Right: Equatable {
              (a: .right(let a), b: .left(let b)):
             return a == b
         }
+    }
+    
+    
+    @inline(__always)
+    public static func != (lhs: Self, rhs: Self) -> Bool
+    where Left == Right
+    {
+        !(lhs == rhs)
     }
 }
 
@@ -46,7 +56,8 @@ extension Either: Equatable where Left: Equatable, Right: Equatable {
 
 extension Either: Comparable where Left: Comparable, Right: Comparable {
     
-    public static func < (lhs: Self, rhs: Self) -> Bool { // TODO: Test
+    @inlinable
+    public static func < (lhs: Self, rhs: Self) -> Bool {
         switch (a: lhs, b: rhs) {
         case (a: .left(let leftA), b: .left(let leftB)):
             return leftA < leftB
@@ -60,15 +71,63 @@ extension Either: Comparable where Left: Comparable, Right: Comparable {
     }
     
     
+    @inlinable
     public static func < (lhs: Self, rhs: Self) -> Bool
     where Left == Right
-    { // TODO: Test
+    {
+        switch (a: lhs, b: rhs) {
+        case (a: .left(let a),  b: .left(let b)),
+            (a: .right(let a), b: .right(let b)),
+            (a: .left(let a),  b: .right(let b)),
+            (a: .right(let a), b: .left(let b)):
+            return a < b
+        }
+    }
+}
+
+
+
+// Swift compiler requires this be a separate extension for some reason
+public extension Either where Left: Comparable, Right: Comparable {
+    
+    @inlinable
+    static func <= (lhs: Self, rhs: Self) -> Bool
+    where Left == Right
+    {
         switch (a: lhs, b: rhs) {
         case (a: .left(let a),  b: .left(let b)),
              (a: .right(let a), b: .right(let b)),
              (a: .left(let a),  b: .right(let b)),
              (a: .right(let a), b: .left(let b)):
-            return a < b
+            return a <= b
+        }
+    }
+    
+    
+    @inlinable
+    static func >= (lhs: Self, rhs: Self) -> Bool
+    where Left == Right
+    {
+        switch (a: lhs, b: rhs) {
+        case (a: .left(let a),  b: .left(let b)),
+             (a: .right(let a), b: .right(let b)),
+             (a: .left(let a),  b: .right(let b)),
+             (a: .right(let a), b: .left(let b)):
+            return a >= b
+        }
+    }
+    
+    
+    @inlinable
+    static func > (lhs: Self, rhs: Self) -> Bool
+    where Left == Right
+    {
+        switch (a: lhs, b: rhs) {
+        case (a: .left(let a),  b: .left(let b)),
+             (a: .right(let a), b: .right(let b)),
+             (a: .left(let a),  b: .right(let b)),
+             (a: .right(let a), b: .left(let b)):
+            return a > b
         }
     }
 }
@@ -78,7 +137,7 @@ extension Either: Comparable where Left: Comparable, Right: Comparable {
 // MARK: - Hashable
 
 extension Either: Hashable where Left: Hashable, Right: Hashable {
-    public func hash(into hasher: inout Hasher) { // TODO: Test
+    public func hash(into hasher: inout Hasher) {
         switch self {
         case .left(let left):   left.hash(into: &hasher)
         case .right(let right): right.hash(into: &hasher)
@@ -91,7 +150,7 @@ extension Either: Hashable where Left: Hashable, Right: Hashable {
 // MARK: - CustomStringConvertible
 
 extension Either: CustomStringConvertible where Left: CustomStringConvertible, Right: CustomStringConvertible {
-    public var description: String { // TODO: Test
+    public var description: String {
         switch self {
         case .left(let left):
             return left.description
@@ -107,7 +166,7 @@ extension Either: CustomStringConvertible where Left: CustomStringConvertible, R
 // MARK: - CustomDebugStringConvertible
 
 extension Either: CustomDebugStringConvertible where Left: CustomDebugStringConvertible, Right: CustomDebugStringConvertible {
-    public var debugDescription: String { // TODO: Test
+    public var debugDescription: String {
         switch self {
         case .left(let left):
             return left.debugDescription
@@ -134,7 +193,7 @@ private extension Either {
 // MARK: - Encodable
 
 extension Either: Encodable where Left: Encodable, Right: Encodable {
-    public func encode(to encoder: Encoder) throws { // TODO: Test
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKey.self)
         
         switch self {
@@ -152,7 +211,7 @@ extension Either: Encodable where Left: Encodable, Right: Encodable {
 // MARK: - Decodable
 
 extension Either: Decodable where Left: Decodable, Right: Decodable {
-    public init(from decoder: Decoder) throws { // TODO: Test
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKey.self)
         
         if let left = try container.decodeIfPresent(Left.self, forKey: .left) {

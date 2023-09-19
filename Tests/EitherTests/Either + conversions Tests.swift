@@ -66,4 +66,65 @@ final class Either___conversions_Tests: XCTestCase {
             XCTAssertEqual(value, 7)
         }
     }
+    
+    
+    // MARK: - Either.init(Result)
+    
+    func testFromResult() {
+        let result_stringSuccess = Result<String, DemoError>.success("it work")
+        let either_stringSuccess = Either(result_stringSuccess)
+        XCTAssertTrue(type(of: either_stringSuccess) == Either<String, DemoError>.self)
+        
+        switch either_stringSuccess {
+        case .left(let left):
+            XCTAssertEqual(left, "it work")
+            
+        case .right(let right):
+            XCTFail("How'd \(right) get there??")
+        }
+        
+        
+        let result_stringFail = Result<String, DemoError>.failure(.one)
+        let either_stringFail = Either(result_stringFail)
+        XCTAssertTrue(type(of: either_stringFail) == Either<String, DemoError>.self)
+        
+        switch either_stringFail {
+        case .left(let left):
+            XCTFail("How'd \(left) get there??")
+            
+        case .right(let right):
+            XCTAssertEqual(right, .one)
+        }
+    }
+    
+    
+    // MARK: - Result.init(Either)
+    
+    func testToResult() {
+        let either_stringSuccess = Either<String, DemoError>.left("it work")
+        let result_stringSuccess = Result<String, DemoError>(either_stringSuccess)
+        XCTAssertTrue(type(of: result_stringSuccess) == Result<String, DemoError>.self)
+        
+        switch result_stringSuccess {
+        case .success(let success):
+            XCTAssertEqual(success, "it work")
+            
+        case .failure(let failure):
+            XCTFail("How'd \(failure) get there??")
+        }
+        
+        
+        let either_stringFail = Either<String, DemoError>.right(.one)
+        let result_stringFail = Result(either_stringFail)
+        print(Either.init(either_stringFail))
+        XCTAssertTrue(type(of: result_stringFail) == Result<String, DemoError>.self)
+        
+        switch result_stringFail {
+        case .success(let success):
+            XCTFail("How'd \(success) get there??")
+            
+        case .failure(let failure):
+            XCTAssertEqual(failure, .one)
+        }
+    }
 }

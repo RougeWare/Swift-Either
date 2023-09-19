@@ -193,7 +193,7 @@ final class Either___map_Tests: XCTestCase {
         }
         
         
-        let intRight_squared = intRight._autoMap { $0.description }
+        let intRight_squared = intRight._autoMap { $0 * $0 }
         XCTAssertTrue(type(of: intRight_squared) == Either<String, Int>.self)
         switch intRight_squared {
         case .left(let left):

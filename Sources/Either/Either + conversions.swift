@@ -15,7 +15,7 @@ public extension Either where Left == Void {
     /// Converts an `Optional` into an `Either`, converting the `.none` case into `.left(Void())`, and `.some(right)` into `.right(right)`
     ///
     /// - Parameter optional: The value to be converted into an `Either`
-    init(_ optional: Optional<Right>) { // TODO: Test
+    init(_ optional: Optional<Right>) {
         switch optional {
         case .none: 
             self = .left(())
@@ -23,6 +23,17 @@ public extension Either where Left == Void {
         case .some(let right):
             self = .right(right)
         }
+    }
+    
+    
+    init(wrapping wrapped: Optional<Right>) {
+        self.init(wrapped)
+    }
+    
+    
+    @available(*, unavailable, message: "Ambiguous use of `Either` initializer. If you meant to wrap the given argument within another `Either`, call `.init(wrapping:)`. If you meant to create a new `Either` from an existing one, simply create a new `let` or `var` and assign the old one to the new name.")
+    init<Other>(_ optional: Either<Right, Other>?) {
+        preconditionFailure("Unavailable initializer called")
     }
 }
 
@@ -72,7 +83,7 @@ public extension Result {
     /// The given `Either`'s `Left` will be treated as the `Success`, and the `Right` will be treated as the `Failure`, so `Right` must be an `Error`
     ///
     /// - Parameter either: The `Either` which can be represented as a `Result<Left, Right>`
-    init(_ either: Either<Success, Failure>) { // TODO: Test
+    init(_ either: Either<Success, Failure>) {
         switch either {
         case .left(let left):
             self = .success(left)
