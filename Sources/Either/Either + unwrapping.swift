@@ -73,11 +73,9 @@ public extension Either where Left == Right {
     /// This is only available when the `Left` type is the same as the `Right` type
     var value: Value {
         switch self {
-        case .left(let left):
-            return left
-            
-        case .right(let right):
-            return right
+        case .left(let value),
+                .right(let value):
+            return value
         }
     }
     

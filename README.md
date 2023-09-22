@@ -51,7 +51,7 @@ Currently, these are supported:
         "either": {
             "left": {
                 "name": "Dax",
-                "color": 6765239
+                "favoriteColor": 6765239
             }
         }
     }
@@ -62,6 +62,34 @@ Currently, these are supported:
         "either": {
             "right": 42
         }
+    }
+    ```
+
+
+
+## Unwrapping
+
+Obviously you gotta eventually get a value out of this, and it offers a few approaches:
+
+- **`left`** – If the `Either` is a `.left`, then that value is returned, else `nil`
+- **`right`** – If the `Either` is a `.right`, then that value is returned, else `nil`
+
+
+When both `Left` and `Right` are the same type, then these are also available:
+
+- **`value`** – The current value, disregarding whether that value is `.left` or `.right`
+- **`*`** – Inspired by the semantics of dereferencing a pointer in C (and because Swift doesn't allow custom postfix `!`), place this before the `Either` instance for the same behavior as calling `.value:
+    ```swift
+    func name(_ user: Either<Person, Person>) -> String {
+        return (*user).name
+    }
+    ```
+- **`Value`** – Since both positions are the same type, this typealias allows you to reference that type without specifically using `Left` or `Right`:
+    ```swift
+    typealias LegacyOrMigratedUser = Either<User, User>
+    
+    func account(of user: LegacyOrMigratedUser) -> LegacyOrMigratedUser.Value.Account {
+        (*user).account
     }
     ```
 
