@@ -371,3 +371,14 @@ final class Either___autoconformance_Tests: XCTestCase {
         }
     }
 }
+
+
+
+// MARK: - Either + Sendable
+
+// Just test whether it compiles
+
+private struct SendableConformanceTestContainer: Sendable {
+    var eitherA: Either<Int, String> = .left(7)
+    var eitherB: Either<Int, String> = .right("seven")
+}

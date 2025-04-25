@@ -14,3 +14,10 @@ public enum Either<Left, Right> {
     case left(Left)
     case right(Right)
 }
+
+
+
+// MARK: - Sendable
+// (this would be in `Either + autoconformance.swift`, but the compiler prefers it in the same file as the original declaration
+
+extension Either: Sendable where Left: Sendable, Right: Sendable {}
