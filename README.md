@@ -64,6 +64,7 @@ Currently, these are supported:
         }
     }
     ```
+- **`Sendable`** Simply declares `Sendable` conformance when `Left` and `Right` are also `Sendable`
 
 
 
