@@ -370,6 +370,37 @@ final class Either___autoconformance_Tests: XCTestCase {
             XCTAssertEqual(wrapped_randomInt, decoded_wrapped_randomInt)
         }
     }
+    
+    
+    func testDecodeRawValue() throws {
+        let payloadLeft = try XCTUnwrap("""
+        {
+            "value": "stringValue"
+        }
+        """.data(using: .utf8))
+        
+        let payloadRight = try XCTUnwrap("""
+        {
+            "value": 42
+        }
+        """.data(using: .utf8))
+        
+        struct TestStruct: Decodable {
+            var value: Either<String, Int>
+        }
+        
+        
+        let decoder = JSONDecoder()
+        
+        let eitherLeft = try decoder.decode(TestStruct.self, from: payloadLeft).value
+        XCTAssertEqual(try XCTUnwrap(eitherLeft.left), "stringValue")
+        
+        let eitherRight = try decoder.decode(TestStruct.self, from: payloadRight).value
+        XCTAssertEqual(try XCTUnwrap(eitherRight.right), 42)
+        
+        XCTAssertNil(try decoder.decode(TestStruct.self, from: payloadRight).value.left, "Expected right-only either to be decoded, but somehow left-only either had a value.")
+        XCTAssertNil(try decoder.decode(TestStruct.self, from: payloadLeft).value.right, "Expected left-only either to be decoded, but somehow right-only either had a value.")
+    }
 }
 
 
