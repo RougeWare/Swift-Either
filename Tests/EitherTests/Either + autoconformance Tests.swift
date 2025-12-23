@@ -336,7 +336,7 @@ final class Either___autoconformance_Tests: XCTestCase {
         
         
         
-        for _ in 1 ... 20 {
+        for _ in 1 ... 1000 {
             let either_TestCodable_Int_randomTest = CurrentEither.left(.init(
                 name: "Dax",
                 description: Bool.random() ? "A snepderg who helps others" : nil,
@@ -369,6 +369,45 @@ final class Either___autoconformance_Tests: XCTestCase {
             XCTAssertEqual(wrapped_randomTest, decoded_wrapped_randomTest)
             XCTAssertEqual(wrapped_randomInt, decoded_wrapped_randomInt)
         }
+    }
+    
+    
+    func testDecodeRawValue() throws {
+        let payloadLeft = try XCTUnwrap("""
+        {
+            "value": "stringValue"
+        }
+        """.data(using: .utf8))
+        
+        let payloadRight = try XCTUnwrap("""
+        {
+            "value": {
+                "name": "Arc",
+                "favoriteNumber": 1981
+            }
+        }
+        """.data(using: .utf8))
+        
+        struct ComplexStruct: Decodable, Equatable {
+            var name: String
+            var favoriteNumber: Int
+        }
+        
+        struct TestStruct: Decodable {
+            var value: Either<String, ComplexStruct>
+        }
+        
+        
+        let decoder = JSONDecoder()
+        
+        let eitherLeft = try decoder.decode(TestStruct.self, from: payloadLeft).value
+        XCTAssertEqual(try XCTUnwrap(eitherLeft.left), "stringValue")
+        
+        let eitherRight = try decoder.decode(TestStruct.self, from: payloadRight).value
+        XCTAssertEqual(try XCTUnwrap(eitherRight.right), ComplexStruct(name: "Arc", favoriteNumber: 1981))
+        
+        XCTAssertNil(try decoder.decode(TestStruct.self, from: payloadRight).value.left, "Expected right-only either to be decoded, but somehow left-only either had a value.")
+        XCTAssertNil(try decoder.decode(TestStruct.self, from: payloadLeft).value.right, "Expected left-only either to be decoded, but somehow right-only either had a value.")
     }
 }
 

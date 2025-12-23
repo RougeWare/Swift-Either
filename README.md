@@ -64,6 +64,21 @@ Currently, these are supported:
         }
     }
     ```
+    - **`Decodable` – Decoding can accept raw values.** Of course, serialized data like the above are still decoded exactly as described. As of version 2.0.0, this can also be used to decode just the raw value itself, without specifying `"left"`/`"right"`:
+        ```json
+        {
+            "either": {
+                "name": "Dax",
+                "favoriteColor": 6765239
+            }
+        }
+        ```
+        or:
+        ```json
+        {
+            "right": 42
+        }
+        ```
 - **`Sendable`** Simply declares `Sendable` conformance when `Left` and `Right` are also `Sendable`
 
 
