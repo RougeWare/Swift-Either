@@ -216,26 +216,29 @@ extension Either: Decodable where Left: Decodable, Right: Decodable {
             
             if let left = try container.decodeIfPresent(Left.self, forKey: .left) {
                 self = .left(left)
+                return
             }
             else if let right = try container.decodeIfPresent(Right.self, forKey: .right) {
                 self = .right(right)
+                return
             }
             else {
-                throw NeitherLeftNorRightValueWasEncoded()
+                // try decoding a raw value
             }
         }
+        
+        // Raw value decoding
+        
+        let container = try decoder.singleValueContainer()
+        
+        if let left = try? container.decode(Left.self) {
+            self = .left(left)
+        }
+        else if let right = try? container.decode(Right.self) {
+            self = .right(right)
+        }
         else {
-            let container = try decoder.singleValueContainer()
-            
-            if let left = try? container.decode(Left.self) {
-                self = .left(left)
-            }
-            else if let right = try? container.decode(Right.self) {
-                self = .right(right)
-            }
-            else {
-                throw NeitherLeftNorRightValueWasEncoded()
-            }
+            throw NeitherLeftNorRightValueWasEncoded()
         }
     }
     
