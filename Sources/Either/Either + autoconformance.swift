@@ -42,6 +42,26 @@ extension Either: Equatable where Left: Equatable, Right: Equatable {
     }
     
     
+    @inlinable
+    public static func == (lhs: Self, rhs: Right) -> Bool
+    where Left == Right
+    {
+        switch (a: lhs, b: rhs) {
+        case (a: .left(let a),  b: let b),
+             (a: .right(let a), b: let b):
+            return a == b
+        }
+    }
+    
+    
+    @inlinable
+    public static func == (lhs: Left, rhs: Self) -> Bool
+    where Left == Right
+    {
+        rhs == lhs
+    }
+    
+    
     @inline(__always)
     public static func != (lhs: Self, rhs: Self) -> Bool
     where Left == Right
